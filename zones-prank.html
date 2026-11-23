@@ -1,92 +1,102 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ZONES MATRIX</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZONES CYBER SYSTEM</title>
 <style>
-body {
-  background: black;
-  color: #00ff66;
-  font-family: monospace;
-  text-align: center;
-  overflow: hidden;
+*{box-sizing:border-box}
+body{
+  margin:0;background:#000;color:#00ff66;
+  font-family:monospace;text-align:center;
+  padding:25px 12px;overflow:hidden;
 }
-h1 {
-  color: #00ff66;
-  text-shadow: 0 0 15px #00ff66;
-  font-size: 45px;
+canvas{position:fixed;inset:0;width:100%;height:100%;z-index:-1}
+h1{font-size:42px;text-shadow:0 0 15px #00ff66}
+.panel{
+  max-width:500px;margin:25px auto;padding:20px;
+  border:1px solid #00ff66;background:#001006dd;
+  box-shadow:0 0 20px #00ff6644;
 }
-#timer {
-  color: #ff00ff;
-  font-size: 35px;
-}
-#screen {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  opacity: .7;
-}
-#notice { color: #ff00ff; }
-button {
-  background: #00ff66;
-  padding: 15px;
-  border: 0;
-  font-weight: bold;
-}
+#logs{height:190px;overflow:hidden;text-align:left;line-height:1.8}
+.big{font-size:24px;text-shadow:0 0 12px #00ff66}
+.small{font-size:12px;color:#aaffbb}
 </style>
 </head>
 <body>
-<canvas id="screen"></canvas>
+<canvas id="matrix"></canvas>
+
 <h1>ZONES</h1>
-<h2>EXTREME MATRIX</h2>
-<div id="timer">60</div>
-<p id="notice">SIMULATED MATRIX EFFECT</p>
-<p id="status">READY TO START</p>
-<button onclick="start()">START PRANK</button>
+<p>CYBER SYSTEM // ONLINE</p>
+
+<div class="panel">
+  <p class="big">SYSTEM SCANNING...</p>
+  <p id="clock"></p>
+  <p id="device"></p>
+  <div id="logs"></div>
+  <p class="big" id="status"></p>
+  <p class="small">SIMULATED EFFECT — NO PRIVATE DATA IS ACCESSED.</p>
+  <h2>JUST A PRANK 😂</h2>
+</div>
+
 <script>
-const c=document.getElementById("screen");
-const x=c.getContext("2d");
-let w,h, drops=[];
+const clock=document.getElementById("clock");
+const device=document.getElementById("device");
+const logs=document.getElementById("logs");
+const status=document.getElementById("status");
+
+function updateClock(){
+  clock.textContent="LOCAL TIME: "+new Date().toLocaleString();
+}
+updateClock();
+setInterval(updateClock,1000);
+
+device.textContent="BROWSER: "+navigator.language+
+" | PLATFORM: "+navigator.platform;
+
+const messages=[
+"> Initializing ZONES system...",
+"> Connecting to simulation...",
+"> Checking browser information...",
+"> Running visual scan...",
+"> Analyzing demo signals...",
+"> Simulation completed."
+];
+
+let i=0;
+const timer=setInterval(()=>{
+  if(i<messages.length){
+    logs.innerHTML+="<div>"+messages[i]+"</div>";
+    i++;
+  }else{
+    clearInterval(timer);
+    status.textContent="ACCESS GRANTED";
+  }
+},1200);
+
+// Matrix background animation
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+let drops=[];
 function resize(){
- w=c.width=innerWidth;
- h=c.height=innerHeight;
- drops=Array(Math.floor(w/15)).fill(1);
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+  drops=Array(Math.floor(canvas.width/16)).fill(1);
 }
 resize();
-onresize=resize;
+window.addEventListener("resize",resize);
 function draw(){
- x.fillStyle="rgba(0,0,0,.12)";
- x.fillRect(0,0,w,h);
- x.fillStyle="#00ff66";
- x.font="15px monospace";
- drops.forEach((y,i)=>{
-  x.fillText(Math.random()>0.5?"1":"0",i*15,y*15);
-  if(y*15>h&&Math.random()>.97)drops[i]=0;
-  drops[i]++;
- });
- requestAnimationFrame(draw);
+  ctx.fillStyle="rgba(0,0,0,0.08)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#00ff66";
+  ctx.font="15px monospace";
+  drops.forEach((y,x)=>{
+    ctx.fillText(Math.random()>0.5?"1":"0",x*16,y*16);
+    if(y*16>canvas.height&&Math.random()>0.975)drops[x]=0;
+    drops[x]++;
+  });
 }
-draw();
-let running=false;
-function start(){
- if(running)return;
- running=true;
- let t=60;
- document.getElementById("status").textContent="MATRIX ANIMATION RUNNING";
- document.querySelector("button").disabled=true;
- let timer=setInterval(()=>{
-  t--;
-  document.getElementById("timer").textContent=t;
-  if(t<=0){
-   clearInterval(timer);
-   document.getElementById("status").textContent="ZONES GOT YOU 😂";
-   document.getElementById("notice").textContent="JUST A PRANK!";
-   document.querySelector("button").disabled=false;
-   running=false;
-  }
- },1000);
-}
+setInterval(draw,50);
 </script>
 </body>
 </html>
