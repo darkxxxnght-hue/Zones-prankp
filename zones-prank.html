@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZONES MATRIX</title>
+<style>
+body {
+  background: black;
+  color: #00ff66;
+  font-family: monospace;
+  text-align: center;
+  overflow: hidden;
+}
+h1 {
+  color: #00ff66;
+  text-shadow: 0 0 15px #00ff66;
+  font-size: 45px;
+}
+#timer {
+  color: #ff00ff;
+  font-size: 35px;
+}
+#screen {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: .7;
+}
+#notice { color: #ff00ff; }
+button {
+  background: #00ff66;
+  padding: 15px;
+  border: 0;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<canvas id="screen"></canvas>
+<h1>ZONES</h1>
+<h2>EXTREME MATRIX</h2>
+<div id="timer">60</div>
+<p id="notice">SIMULATED MATRIX EFFECT</p>
+<p id="status">READY TO START</p>
+<button onclick="start()">START PRANK</button>
+<script>
+const c=document.getElementById("screen");
+const x=c.getContext("2d");
+let w,h, drops=[];
+function resize(){
+ w=c.width=innerWidth;
+ h=c.height=innerHeight;
+ drops=Array(Math.floor(w/15)).fill(1);
+}
+resize();
+onresize=resize;
+function draw(){
+ x.fillStyle="rgba(0,0,0,.12)";
+ x.fillRect(0,0,w,h);
+ x.fillStyle="#00ff66";
+ x.font="15px monospace";
+ drops.forEach((y,i)=>{
+  x.fillText(Math.random()>0.5?"1":"0",i*15,y*15);
+  if(y*15>h&&Math.random()>.97)drops[i]=0;
+  drops[i]++;
+ });
+ requestAnimationFrame(draw);
+}
+draw();
+let running=false;
+function start(){
+ if(running)return;
+ running=true;
+ let t=60;
+ document.getElementById("status").textContent="MATRIX ANIMATION RUNNING";
+ document.querySelector("button").disabled=true;
+ let timer=setInterval(()=>{
+  t--;
+  document.getElementById("timer").textContent=t;
+  if(t<=0){
+   clearInterval(timer);
+   document.getElementById("status").textContent="ZONES GOT YOU 😂";
+   document.getElementById("notice").textContent="JUST A PRANK!";
+   document.querySelector("button").disabled=false;
+   running=false;
+  }
+ },1000);
+}
+</script>
+</body>
+</html>
